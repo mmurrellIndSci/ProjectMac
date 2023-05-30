@@ -1,7 +1,7 @@
 include <iostream>
 
 int main(){
- std::cout << "Hello MAC N CHEESE";
+ std::cout << "Hello MAC N CHEESE. Goodbye!";
  
  return 0;
 }
