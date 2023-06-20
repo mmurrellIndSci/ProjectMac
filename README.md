@@ -1,2 +1,2 @@
-# ProjectMac
-2023 Fortive Hackathon!!!
+# xrtestr
+first try at unity occulus stuff
