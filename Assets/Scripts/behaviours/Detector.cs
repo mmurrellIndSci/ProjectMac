@@ -27,6 +27,7 @@ namespace Fortive.Mac
         public AudioClip Connected;
         public AudioClip Disconnect;
 
+
         public Color OffColor = Color.black;
         public Color StartupColor = Color.gray;
         public Color NormalColor = Color.white;
