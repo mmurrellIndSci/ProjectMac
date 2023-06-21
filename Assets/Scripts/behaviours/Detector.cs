@@ -11,10 +11,13 @@ namespace Fortive.Mac
     {
         private AudioSource audioSource;
         private List<GasEmitter> emitters = new List<GasEmitter>();
+        private List<Detector> Peers = new List<Detector>();
         private GasLevel currentLevel = GasLevel.None;
         private MeshRenderer mesh;
 
         public List<GameObject> lights = new List<GameObject>();
+
+        public bool IsInPanicMode;
         public MenuState MenuState = MenuState.Normal;
         public AudioClip LowAlarm;
         public AudioClip HighAlarm;
@@ -32,6 +35,7 @@ namespace Fortive.Mac
         public Color BumpColor = Color.cyan;
         public Color LowAlarmColor = Color.yellow;
         public Color HighAlarmColor = Color.red;
+        public Color PanicColor = Color.magenta;
 
         #region event-handlers
         // Start is called before the first frame update
@@ -78,6 +82,11 @@ namespace Fortive.Mac
         #endregion
 
         #region helpers
+        private bool PanicActivated()
+        {
+            return this.Peers.Any(p => p.MenuState != MenuState.Off && p.MenuState != MenuState.Startup && p.IsInPanicMode);
+        }
+
         private void SetMenuScreen()
         {
             Color color = MenuState switch
@@ -90,6 +99,11 @@ namespace Fortive.Mac
                 MenuState.Bump => BumpColor,
                 _ => OffColor
             };
+
+            if (PanicActivated())
+            {
+                color = PanicColor;
+            }
 
             SetMenuScreen(color);
         }
@@ -116,7 +130,7 @@ namespace Fortive.Mac
                         }
                     });
             }
-            else
+            else if (!IsInPanicMode)
             {
                 MenuState = MenuState.Off;
             }
@@ -127,6 +141,9 @@ namespace Fortive.Mac
         {
             this.emitters = GameObject.FindGameObjectsWithTag("Emitter")
                 .SelectMany(obj => obj.GetComponents<GasEmitter>())
+                .ToList();
+            this.Peers = GameObject.FindGameObjectsWithTag("Detector")
+                .SelectMany(obj => obj.GetComponents<Detector>())
                 .ToList();
         }
 
@@ -143,10 +160,9 @@ namespace Fortive.Mac
                 case MenuState.Off:
                 case MenuState.Startup:
                     alarmLevel = GasLevel.None;
-
                     break;
                 default:
-                    alarmLevel = emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
+                    alarmLevel = PanicActivated() ? GasLevel.Panic :  emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
                     break;
             }
 
@@ -181,6 +197,18 @@ namespace Fortive.Mac
                             if (mesh?.material != null)
                             {
                                 mesh.material.color = HighAlarmColor;
+                            }
+                        }
+                        break;
+                    case GasLevel.Panic:
+                        audioSource.clip = PanicAlarm;
+                        audioSource.Play();
+                        foreach (var light in lights)
+                        {
+                            var mesh = light.GetComponent<MeshRenderer>();
+                            if (mesh?.material != null)
+                            {
+                                mesh.material.color = PanicColor;
                             }
                         }
                         break;

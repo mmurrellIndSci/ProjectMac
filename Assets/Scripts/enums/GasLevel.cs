@@ -7,8 +7,8 @@ namespace Fortive.Mac
     public enum GasLevel
     {
         None,
-        VeryLow,
         Low,
-        High
+        High,
+        Panic
     }
 }
