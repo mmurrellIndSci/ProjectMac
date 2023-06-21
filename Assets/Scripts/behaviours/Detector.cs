@@ -24,24 +24,7 @@ namespace Fortive.Mac
         public AudioClip Connected;
         public AudioClip Disconnect;
 
-<<<<<<< HEAD
-        public void OnLeftButtonPress()
-        {
-        }
-        public void OnRightButtonPress()
-        {
 
-        }
-        public void OnCenterButtonPress()
-        {
-
-        }
-        public void OnPanicButtonPress()
-        {
-
-        }
-
-=======
         public Color OffColor = Color.black;
         public Color StartupColor = Color.gray;
         public Color NormalColor = Color.white;
@@ -50,7 +33,6 @@ namespace Fortive.Mac
         public Color BumpColor = Color.cyan;
         public Color LowAlarmColor = Color.yellow;
         public Color HighAlarmColor = Color.red;
->>>>>>> 74ea24b9c28d16a680f0de055332896b61830eec
 
         #region event-handlers
         // Start is called before the first frame update
