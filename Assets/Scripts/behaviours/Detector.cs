@@ -14,6 +14,7 @@ namespace Fortive.Mac
         private GasLevel currentLevel = GasLevel.None;
         private MeshRenderer mesh;
 
+        public List<GameObject> lights = new List<GameObject>();
         public MenuState MenuState = MenuState.Normal;
         public AudioClip LowAlarm;
         public AudioClip HighAlarm;
@@ -79,17 +80,15 @@ namespace Fortive.Mac
         #region helpers
         private void SetMenuScreen()
         {
-            Color color = (currentLevel, MenuState) switch
+            Color color = MenuState switch
             {
-                (_, MenuState.Off) => OffColor,
-                (_, MenuState.Startup) => StartupColor,
-                (GasLevel.High, MenuState.Normal) => HighAlarmColor,
-                (GasLevel.Low, MenuState.Normal) => LowAlarmColor,
-                (_, MenuState.Normal) => NormalColor,
-                (_, MenuState.Peers) => PeersColor,
-                (_, MenuState.Zero) => ZeroColor,
-                (_, MenuState.Bump) => BumpColor,
-                (_, _) => OffColor
+                MenuState.Off => OffColor,
+                MenuState.Startup => StartupColor,
+                MenuState.Normal => NormalColor,
+                MenuState.Peers => PeersColor,
+                MenuState.Zero => ZeroColor,
+                MenuState.Bump => BumpColor,
+                _ => OffColor
             };
 
             SetMenuScreen(color);
@@ -144,6 +143,7 @@ namespace Fortive.Mac
                 case MenuState.Off:
                 case MenuState.Startup:
                     alarmLevel = GasLevel.None;
+
                     break;
                 default:
                     alarmLevel = emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
@@ -163,10 +163,36 @@ namespace Fortive.Mac
                     case GasLevel.Low:
                         audioSource.clip = LowAlarm;
                         audioSource.Play();
+                        foreach (var light in lights)
+                        {
+                            var mesh = light.GetComponent<MeshRenderer>();
+                            if (mesh?.material != null)
+                            {
+                                mesh.material.color = LowAlarmColor;
+                            }
+                        }
                         break;
                     case GasLevel.High:
                         audioSource.clip = HighAlarm;
                         audioSource.Play();
+                        foreach (var light in lights)
+                        {
+                            var mesh = light.GetComponent<MeshRenderer>();
+                            if (mesh?.material != null)
+                            {
+                                mesh.material.color = HighAlarmColor;
+                            }
+                        }
+                        break;
+                    default:
+                        foreach (var light in lights)
+                        {
+                            var mesh = light.GetComponent<MeshRenderer>();
+                            if (mesh?.material != null)
+                            {
+                                mesh.material.color = Color.clear;
+                            }
+                        }
                         break;
                 }
             }
