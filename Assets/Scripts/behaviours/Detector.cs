@@ -2,6 +2,8 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+using System;
 
 namespace Fortive.Mac
 {
@@ -10,7 +12,9 @@ namespace Fortive.Mac
         private AudioSource audioSource;
         private List<GasEmitter> emitters = new List<GasEmitter>();
         private GasLevel currentLevel = GasLevel.None;
+        private MeshRenderer mesh;
 
+        public MenuState MenuState = MenuState.Normal;
         public AudioClip LowAlarm;
         public AudioClip HighAlarm;
         public AudioClip PanicAlarm;
@@ -19,10 +23,20 @@ namespace Fortive.Mac
         public AudioClip Connected;
         public AudioClip Disconnect;
 
+        public Color OffColor = Color.black;
+        public Color StartupColor = Color.gray;
+        public Color NormalColor = Color.white;
+        public Color PeersColor = Color.green;
+        public Color ZeroColor = Color.blue;
+        public Color BumpColor = Color.cyan;
+        public Color LowAlarmColor = Color.yellow;
+        public Color HighAlarmColor = Color.red;
 
+        #region event-handlers
         // Start is called before the first frame update
         void Start()
         {
+            mesh = gameObject.GetComponent<MeshRenderer>();
             LoadEmitters();
             LoadAudioSource();
         }
@@ -31,7 +45,84 @@ namespace Fortive.Mac
         void Update()
         {
             SetAlarm();
+            SetMenuScreen();
         }
+
+        void OnModePress(bool isLongPress = false)
+        {
+            if (isLongPress)
+            {
+                ToggleOnOff();
+            }
+            else
+            {
+                switch (MenuState)
+                {
+                    case MenuState.Normal:
+                        MenuState = MenuState.Peers;
+                        break;
+                    case MenuState.Peers:
+                        MenuState = MenuState.Zero;
+                        break;
+                    case MenuState.Zero:
+                        MenuState = MenuState.Bump;
+                        break;
+                    case MenuState.Bump:
+                        MenuState = MenuState.Normal;
+                        break;
+                }
+            }
+
+        }
+        #endregion
+
+        #region helpers
+        private void SetMenuScreen()
+        {
+            Color color = (currentLevel, MenuState) switch
+            {
+                (_, MenuState.Off) => OffColor,
+                (_, MenuState.Startup) => StartupColor,
+                (GasLevel.High, MenuState.Normal) => HighAlarmColor,
+                (GasLevel.Low, MenuState.Normal) => LowAlarmColor,
+                (_, MenuState.Normal) => NormalColor,
+                (_, MenuState.Peers) => PeersColor,
+                (_, MenuState.Zero) => ZeroColor,
+                (_, MenuState.Bump) => BumpColor,
+                (_, _) => OffColor
+            };
+
+            SetMenuScreen(color);
+        }
+
+        private void SetMenuScreen(Color color)
+        {
+            if (mesh.material.color != color)
+            {
+                mesh.material.color = color;
+            }
+        }
+
+        private void ToggleOnOff()
+        {
+            if (MenuState == MenuState.Off)
+            {
+                MenuState = MenuState.Startup;
+                _ = Task.Delay(TimeSpan.FromSeconds(5))
+                    .ContinueWith(tsk =>
+                    {
+                        if (MenuState == MenuState.Startup)
+                        {
+                            MenuState = MenuState.Normal;
+                        }
+                    });
+            }
+            else
+            {
+                MenuState = MenuState.Off;
+            }
+        }
+
 
         private void LoadEmitters()
         {
@@ -47,7 +138,18 @@ namespace Fortive.Mac
 
         private void SetAlarm()
         {
-            var alarmLevel = emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
+            GasLevel alarmLevel; 
+            switch (MenuState)
+            {
+                case MenuState.Off:
+                case MenuState.Startup:
+                    alarmLevel = GasLevel.None;
+                    break;
+                default:
+                    alarmLevel = emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
+                    break;
+            }
+
             if (alarmLevel != currentLevel)
             {
                 currentLevel = alarmLevel;
@@ -69,5 +171,6 @@ namespace Fortive.Mac
                 }
             }
         }
+        #endregion
     }
 }
