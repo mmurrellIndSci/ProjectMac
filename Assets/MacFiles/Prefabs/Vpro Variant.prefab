@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5689378479985444008, guid: dcd8be9ad0e8466479a8dbf9a9a606e2, type: 3}
       propertyPath: m_Name
-      value: Vpro
+      value: Vpro Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5689378479985444015, guid: dcd8be9ad0e8466479a8dbf9a9a606e2, type: 3}
       propertyPath: m_Materials.Array.data[0]

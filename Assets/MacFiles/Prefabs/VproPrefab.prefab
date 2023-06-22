@@ -44,8 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c51c4411262c342b9a8e718d8c10e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
-  reading: 0
+  Reading: 0
+  GasType: 0
+  ReadingType: 0
+  LowAlarmThreshold: 10
+  HighAlarmThreshold: 20
+  AlarmLevel: 0
 --- !u!1 &5689378479985444008
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,9 +191,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92dfbf0d546162449c324414d15a574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lights: []
+  Lights: []
+  Sensors: []
+  mesh: {fileID: 0}
   IsInPanicMode: 0
   MenuState: 2
+  AlarmLevel: 0
   LowAlarm: {fileID: 8300000, guid: 354c37cd61ec24bbcbbc7921d0a71bc1, type: 3}
   HighAlarm: {fileID: 8300000, guid: 9a752d3328516a44384df0f171c8a5ca, type: 3}
   PanicAlarm: {fileID: 0}
