@@ -235,6 +235,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 5177982593253959146, guid: d0b62a7d0663cc144a23cb998644511a, type: 3}
+      propertyPath: mesh
+      value: 
+      objectReference: {fileID: 1030830679}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0b62a7d0663cc144a23cb998644511a, type: 3}
 --- !u!1 &129216923 stripped
@@ -1747,16 +1751,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92dfbf0d546162449c324414d15a574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mesh: {fileID: 789749457}
   lights:
   - {fileID: 2123560488}
   - {fileID: 437018459}
   IsInPanicMode: 0
   MenuState: 0
-  LowAlarm: {fileID: 8300000, guid: 354c37cd61ec24bbcbbc7921d0a71bc1, type: 3}
-  HighAlarm: {fileID: 8300000, guid: c60b8ac4916103d41abbb35a9287ff09, type: 3}
-  PanicAlarm: {fileID: 8300000, guid: 37c9e69911022452a9ebd4ee732ab036, type: 3}
-  PowerOn: {fileID: 0}
-  PowerOff: {fileID: 0}
+  LowAlarm: {fileID: 8300000, guid: 80ab9bd785455da4c933777c939680a0, type: 3}
+  HighAlarm: {fileID: 8300000, guid: 79e8bf154163a6a439f1d50e5f7712cf, type: 3}
+  PanicAlarm: {fileID: 8300000, guid: 8606c000e2e9431409cf2da800cadf2b, type: 3}
+  PowerOn: {fileID: 8300000, guid: b3729f8e540384f4884100919ea584d1, type: 3}
+  PowerOff: {fileID: 8300000, guid: d996956bd98e9dd40a05f927c8e48788, type: 3}
   Connected: {fileID: 0}
   Disconnect: {fileID: 0}
   OffColor: {r: 0, g: 0, b: 0, a: 1}
@@ -1864,6 +1869,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!23 &789749457 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1762523448547610729, guid: cf7e58b46ecbd3a40a64ba9aaed9b57d, type: 3}
+  m_PrefabInstance: {fileID: 789749446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1030830679 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6651229196454266522, guid: d0b62a7d0663cc144a23cb998644511a, type: 3}
+  m_PrefabInstance: {fileID: 123112161}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1720482935
 GameObject:
   m_ObjectHideFlags: 0

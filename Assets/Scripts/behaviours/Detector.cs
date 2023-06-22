@@ -13,7 +13,7 @@ namespace Fortive.Mac
         private List<GasEmitter> emitters = new List<GasEmitter>();
         private List<Detector> Peers = new List<Detector>();
         private GasLevel currentLevel = GasLevel.None;
-        private MeshRenderer mesh;
+        public MeshRenderer mesh;
 
         public List<GameObject> lights = new List<GameObject>();
 
@@ -42,7 +42,6 @@ namespace Fortive.Mac
         // Start is called before the first frame update
         void Start()
         {
-            mesh = gameObject.GetComponent<MeshRenderer>();
             LoadEmitters();
             LoadAudioSource();
         }
@@ -106,14 +105,18 @@ namespace Fortive.Mac
                 color = PanicColor;
             }
 
-            SetMenuScreen(color);
-        }
-
-        private void SetMenuScreen(Color color)
-        {
             if (mesh.material.color != color)
             {
                 mesh.material.color = color;
+                switch (MenuState)
+                {
+                    case MenuState.Startup:
+                        audioSource.PlayOneShot(PowerOn);
+                        break;
+                    case MenuState.Off:
+                        audioSource.PlayOneShot(PowerOff);
+                        break;
+                }
             }
         }
 
