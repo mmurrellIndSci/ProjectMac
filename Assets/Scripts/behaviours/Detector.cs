@@ -40,6 +40,16 @@ namespace Fortive.Mac
         public Color HighAlarmColor = Color.red;
         public Color PanicColor = Color.magenta;
 
+        public MeshRenderer OffScreen;
+        public MeshRenderer StartupScreen;
+        public MeshRenderer NormalReadingScreen;
+        public MeshRenderer PeerScreen;
+        public MeshRenderer ZeroScreen;
+        public MeshRenderer BumpScreen;
+        public MeshRenderer LowAlarmScreen;
+        public MeshRenderer HighAlarmScreen;
+        public MeshRenderer PanicScreen;
+
         #region event-handlers
         // Start is called before the first frame update
         void Start()
