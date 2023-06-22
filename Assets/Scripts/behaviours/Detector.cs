@@ -138,6 +138,18 @@ namespace Fortive.Mac
                 _ => OffScreen
             };
 
+            if (IsPoweredOn())
+            {
+                material = AlarmLevel switch
+                {
+                    AlarmLevel.LowAlarm => LowAlarmScreen,
+                    AlarmLevel.HighAlarm => HighAlarmScreen,
+                    AlarmLevel.PeerAlarm => PanicScreen,
+                    AlarmLevel.PanicAlarm => PanicScreen,
+                    _ => material
+                };
+            }
+
             if (mesh.material != material)
             {
                 mesh.material = material;
