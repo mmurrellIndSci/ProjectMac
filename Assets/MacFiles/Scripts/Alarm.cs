@@ -15,12 +15,41 @@ public class Alarm : MonoBehaviour
     }
 
     public List<Sensor> sensors;
-    AlarmLevel alarm_level;
+    public AlarmLevel alarm_level;
+    public GameObject matgameobject;
+    private Material mat;
+
+    private void Start()
+    {
+        mat = matgameobject.GetComponent<MeshRenderer>().material;
+    }
 
     // Update is called once per frame
     void Update()
     {
         GetHighestAlarm();
+        switch (alarm_level)
+        {
+            case AlarmLevel.GasDetected:
+                mat.color = new Color(1, 1, 1, 1);
+                break;
+            case AlarmLevel.None:
+                mat.color = new Color(1, 0, 1, 1);
+                break;
+            case AlarmLevel.LowAlarm:
+                mat.color = new Color(1, 0, 0, 1);
+                break;
+            case AlarmLevel.HighAlarm:
+                mat.color = new Color(0, 1, 1, 1);
+                break;
+            case AlarmLevel.PanicAlarm:
+                mat.color = new Color(0, 0, 1, 1);
+                break;
+            case AlarmLevel.PeerAlarm:
+                mat.color = new Color(1, 1, 1, 1);
+                break;
+
+        }
     }
 
     private void GetHighestAlarm()
@@ -56,7 +85,8 @@ public class Alarm : MonoBehaviour
 
     public void PanicAlarm()
     {
-        alarm_level = AlarmLevel.PanicAlarm;
+        //Disable for now until button detection is better
+        //alarm_level = AlarmLevel.PanicAlarm;
     }
 
 }
