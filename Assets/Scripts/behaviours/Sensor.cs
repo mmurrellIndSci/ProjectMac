@@ -66,7 +66,7 @@ namespace Fortive.Mac
             foreach (var source in sources)
             {
                 Vector3 difference = this.transform.position - source.transform.position;
-                var level = source.GasLevel * Mathf.Sqrt(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
+                var level = source.GasLevel / Mathf.Sqrt(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
                 gasLevel += level;
             }
 
