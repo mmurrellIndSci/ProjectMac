@@ -4,11 +4,13 @@ using UnityEngine;
 
 namespace Fortive.Mac
 {
-    public enum GasLevel
+    public enum AlarmLevel
     {
         None,
-        Low,
-        High,
-        Panic
+        GasDetected,
+        LowAlarm,
+        HighAlarm,
+        PeerAlarm,
+        PanicAlarm,
     }
 }

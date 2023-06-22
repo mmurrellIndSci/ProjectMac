@@ -10,15 +10,17 @@ namespace Fortive.Mac
     public class Detector : MonoBehaviour
     {
         private AudioSource audioSource;
-        private List<GasEmitter> emitters = new List<GasEmitter>();
-        private List<Detector> Peers = new List<Detector>();
-        private GasLevel currentLevel = GasLevel.None;
+        private List<Detector> peers;
+        private MenuState _lastMenuState = MenuState.Off;
+
+
+        public List<GameObject> Lights = new List<GameObject>();
+        public List<Sensor> Sensors = new List<Sensor>();
+
         public MeshRenderer mesh;
-
-        public List<GameObject> lights = new List<GameObject>();
-
         public bool IsInPanicMode;
-        public MenuState MenuState = MenuState.Normal;
+        public MenuState MenuState = MenuState.Off;
+        public AlarmLevel AlarmLevel = AlarmLevel.None;
         public AudioClip LowAlarm;
         public AudioClip HighAlarm;
         public AudioClip PanicAlarm;
@@ -38,15 +40,22 @@ namespace Fortive.Mac
         public Color HighAlarmColor = Color.red;
         public Color PanicColor = Color.magenta;
 
-        public Alarm AlarmLevel;
-
         #region event-handlers
         // Start is called before the first frame update
         void Start()
         {
-            LoadEmitters();
-            LoadAudioSource();
-            mesh.material.color = OffColor;
+            this.peers = GameObject.FindGameObjectsWithTag("Detector")
+                .SelectMany(obj => obj.GetComponents<Detector>())
+                .ToList();
+            this.audioSource = gameObject.GetComponent<AudioSource>();
+            foreach (var light in Lights)
+            {
+                var mesh = light.GetComponent<MeshRenderer>();
+                if (mesh?.material != null)
+                {
+                    mesh.material.color = Color.clear;
+                }
+            }
         }
 
         // Update is called once per frame
@@ -55,6 +64,17 @@ namespace Fortive.Mac
             SetAlarm();
             SetMenuScreen();
         }
+
+        public void TogglePanicMode()
+        {
+            if (MenuState != MenuState.Off && MenuState != MenuState.Startup)
+            {
+                IsInPanicMode = !IsInPanicMode;
+            }
+        }
+
+        public bool IsPoweredOn()
+            => MenuState != MenuState.Off && MenuState != MenuState.Startup;
 
         public void OnModePress()
         {
@@ -80,10 +100,27 @@ namespace Fortive.Mac
         #endregion
 
         #region helpers
-        private bool PanicActivated()
+        private AlarmLevel GetAlarmLevel()
         {
-            return this.Peers.Any(p => p.MenuState != MenuState.Off && p.MenuState != MenuState.Startup && p.IsInPanicMode);
+            switch (MenuState)
+            {
+                case MenuState.Off:
+                case MenuState.Startup:
+                    return AlarmLevel.None;
+            }
+
+            if (this.IsInPanicMode)
+            {
+                return AlarmLevel.PanicAlarm;
+            }
+            else if (this.peers.Any(p => p.IsPoweredOn() && p.IsInPanicMode))
+            {
+                return AlarmLevel.PeerAlarm;
+            }
+
+            return Sensors.Select(s => s.AlarmLevel).DefaultIfEmpty(AlarmLevel.None).Max();
         }
+
 
         private void SetMenuScreen()
         {
@@ -98,23 +135,25 @@ namespace Fortive.Mac
                 _ => OffColor
             };
 
-            if (PanicActivated())
-            {
-                color = PanicColor;
-            }
-
             if (mesh.material.color != color)
             {
                 mesh.material.color = color;
-                switch (MenuState)
-                {
-                    case MenuState.Startup:
-                        audioSource.PlayOneShot(PowerOn);
-                        break;
-                    case MenuState.Off:
-                        audioSource.PlayOneShot(PowerOff);
-                        break;
-                }
+            }
+
+            if (_lastMenuState == MenuState)
+            {
+                return;
+            }
+
+            _lastMenuState = MenuState;
+            switch (MenuState)
+            {
+                case MenuState.Startup:
+                    audioSource.PlayOneShot(PowerOn);
+                    break;
+                case MenuState.Off:
+                    audioSource.PlayOneShot(PowerOff);
+                    break;
             }
         }
 
@@ -132,98 +171,56 @@ namespace Fortive.Mac
                         }
                     });
             }
-            else if (!IsInPanicMode)
+            else
             {
+                IsInPanicMode = false;
                 MenuState = MenuState.Off;
             }
         }
 
-
-        private void LoadEmitters()
-        {
-            this.emitters = GameObject.FindGameObjectsWithTag("Emitter")
-                .SelectMany(obj => obj.GetComponents<GasEmitter>())
-                .ToList();
-            this.Peers = GameObject.FindGameObjectsWithTag("Detector")
-                .SelectMany(obj => obj.GetComponents<Detector>())
-                .ToList();
-        }
-
-        private void LoadAudioSource()
-        {
-            this.audioSource = gameObject.GetComponent<AudioSource>();
-        }
-
         private void SetAlarm()
         {
-            GasLevel alarmLevel; 
-            switch (MenuState)
+            var alarmLevel = GetAlarmLevel();
+            if (alarmLevel != AlarmLevel)
             {
-                case MenuState.Off:
-                case MenuState.Startup:
-                    alarmLevel = GasLevel.None;
-                    break;
-                default:
-                    alarmLevel = PanicActivated() ? GasLevel.Panic :  emitters.Select(e => e.Level).DefaultIfEmpty(GasLevel.None).Max();
-                    break;
-            }
-
-            if (alarmLevel != currentLevel)
-            {
-                currentLevel = alarmLevel;
+                AlarmLevel = alarmLevel;
                 if (audioSource.isPlaying)
                 {
                     audioSource.Stop();
                 }
 
-                switch (currentLevel)
+                AudioClip audio = null;
+                Color color = Color.clear;
+
+                switch (AlarmLevel)
                 {
-                    case GasLevel.Low:
-                        audioSource.clip = LowAlarm;
-                        audioSource.Play();
-                        foreach (var light in lights)
-                        {
-                            var mesh = light.GetComponent<MeshRenderer>();
-                            if (mesh?.material != null)
-                            {
-                                mesh.material.color = LowAlarmColor;
-                            }
-                        }
+                    case AlarmLevel.LowAlarm:
+                        audio = LowAlarm;
+                        color = LowAlarmColor;
                         break;
-                    case GasLevel.High:
-                        audioSource.clip = HighAlarm;
-                        audioSource.Play();
-                        foreach (var light in lights)
-                        {
-                            var mesh = light.GetComponent<MeshRenderer>();
-                            if (mesh?.material != null)
-                            {
-                                mesh.material.color = HighAlarmColor;
-                            }
-                        }
+                    case AlarmLevel.HighAlarm:
+                        audio = HighAlarm;
+                        color = HighAlarmColor;
                         break;
-                    case GasLevel.Panic:
-                        audioSource.clip = PanicAlarm;
-                        audioSource.Play();
-                        foreach (var light in lights)
-                        {
-                            var mesh = light.GetComponent<MeshRenderer>();
-                            if (mesh?.material != null)
-                            {
-                                mesh.material.color = PanicColor;
-                            }
-                        }
+                    case AlarmLevel.PeerAlarm:
+                    case AlarmLevel.PanicAlarm:
+                        audio = PanicAlarm;
+                        color = PanicColor;
                         break;
-                    default:
-                        foreach (var light in lights)
-                        {
-                            var mesh = light.GetComponent<MeshRenderer>();
-                            if (mesh?.material != null)
-                            {
-                                mesh.material.color = Color.clear;
-                            }
-                        }
-                        break;
+                }
+
+                if (audio != null)
+                {
+                    audioSource.clip = audio;
+                    audioSource.Play();
+                }
+                foreach (var light in Lights)
+                {
+                    var mesh = light.GetComponent<MeshRenderer>();
+                    if (mesh?.material != null)
+                    {
+                        mesh.material.color = color;
+                    }
                 }
             }
         }

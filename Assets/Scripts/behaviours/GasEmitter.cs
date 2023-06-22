@@ -6,22 +6,19 @@ namespace Fortive.Mac
 {
     public class GasEmitter : MonoBehaviour
     {
-        public string Name;
-
-        public GasLevel Level;
-
-        public List<Gas> Gasses = new List<Gas>();
-
-        // Start is called before the first frame update
-        void Start()
+        public enum EmitterState
         {
-
+            Closed,
+            Open
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        public EmitterState State = EmitterState.Open;
+        public Gas GasType = Gas.None;
+        public double GasLevel = 0;
 
+        public void ToggleState()
+        {
+            State = State == EmitterState.Open ? EmitterState.Closed : EmitterState.Open;
         }
     }
 }
