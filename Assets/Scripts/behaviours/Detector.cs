@@ -13,7 +13,7 @@ namespace Fortive.Mac
         private List<GasEmitter> emitters = new List<GasEmitter>();
         private List<Detector> Peers = new List<Detector>();
         private GasLevel currentLevel = GasLevel.None;
-        private MeshRenderer mesh;
+        public MeshRenderer mesh;
 
         public List<GameObject> lights = new List<GameObject>();
 
@@ -38,11 +38,12 @@ namespace Fortive.Mac
         public Color HighAlarmColor = Color.red;
         public Color PanicColor = Color.magenta;
 
+        public Alarm AlarmLevel;
+
         #region event-handlers
         // Start is called before the first frame update
         void Start()
         {
-            mesh = gameObject.GetComponent<MeshRenderer>();
             LoadEmitters();
             LoadAudioSource();
         }
@@ -54,30 +55,25 @@ namespace Fortive.Mac
             SetMenuScreen();
         }
 
-        void OnModePress(bool isLongPress = false)
+        public void OnModePress()
         {
-            if (isLongPress)
+            
+            switch (MenuState)
             {
-                ToggleOnOff();
+                case MenuState.Normal:
+                    MenuState = MenuState.Peers;
+                    break;
+                case MenuState.Peers:
+                    MenuState = MenuState.Zero;
+                    break;
+                case MenuState.Zero:
+                    MenuState = MenuState.Bump;
+                    break;
+                case MenuState.Bump:
+                    MenuState = MenuState.Normal;
+                    break;
             }
-            else
-            {
-                switch (MenuState)
-                {
-                    case MenuState.Normal:
-                        MenuState = MenuState.Peers;
-                        break;
-                    case MenuState.Peers:
-                        MenuState = MenuState.Zero;
-                        break;
-                    case MenuState.Zero:
-                        MenuState = MenuState.Bump;
-                        break;
-                    case MenuState.Bump:
-                        MenuState = MenuState.Normal;
-                        break;
-                }
-            }
+            
 
         }
         #endregion
@@ -106,18 +102,22 @@ namespace Fortive.Mac
                 color = PanicColor;
             }
 
-            SetMenuScreen(color);
-        }
-
-        private void SetMenuScreen(Color color)
-        {
             if (mesh.material.color != color)
             {
                 mesh.material.color = color;
+                switch (MenuState)
+                {
+                    case MenuState.Startup:
+                        audioSource.PlayOneShot(PowerOn);
+                        break;
+                    case MenuState.Off:
+                        audioSource.PlayOneShot(PowerOff);
+                        break;
+                }
             }
         }
 
-        private void ToggleOnOff()
+        public void ToggleOnOff()
         {
             if (MenuState == MenuState.Off)
             {
