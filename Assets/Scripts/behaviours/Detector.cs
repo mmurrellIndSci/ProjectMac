@@ -48,6 +48,14 @@ namespace Fortive.Mac
                 .SelectMany(obj => obj.GetComponents<Detector>())
                 .ToList();
             this.audioSource = gameObject.GetComponent<AudioSource>();
+            foreach (var light in Lights)
+            {
+                var mesh = light.GetComponent<MeshRenderer>();
+                if (mesh?.material != null)
+                {
+                    mesh.material.color = Color.clear;
+                }
+            }
         }
 
         // Update is called once per frame
