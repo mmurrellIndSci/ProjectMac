@@ -38,6 +38,8 @@ namespace Fortive.Mac
         public Color HighAlarmColor = Color.red;
         public Color PanicColor = Color.magenta;
 
+        public Alarm AlarmLevel;
+
         #region event-handlers
         // Start is called before the first frame update
         void Start()
@@ -53,30 +55,25 @@ namespace Fortive.Mac
             SetMenuScreen();
         }
 
-        void OnModePress(bool isLongPress = false)
+        public void OnModePress()
         {
-            if (isLongPress)
+            
+            switch (MenuState)
             {
-                ToggleOnOff();
+                case MenuState.Normal:
+                    MenuState = MenuState.Peers;
+                    break;
+                case MenuState.Peers:
+                    MenuState = MenuState.Zero;
+                    break;
+                case MenuState.Zero:
+                    MenuState = MenuState.Bump;
+                    break;
+                case MenuState.Bump:
+                    MenuState = MenuState.Normal;
+                    break;
             }
-            else
-            {
-                switch (MenuState)
-                {
-                    case MenuState.Normal:
-                        MenuState = MenuState.Peers;
-                        break;
-                    case MenuState.Peers:
-                        MenuState = MenuState.Zero;
-                        break;
-                    case MenuState.Zero:
-                        MenuState = MenuState.Bump;
-                        break;
-                    case MenuState.Bump:
-                        MenuState = MenuState.Normal;
-                        break;
-                }
-            }
+            
 
         }
         #endregion
@@ -120,7 +117,7 @@ namespace Fortive.Mac
             }
         }
 
-        private void ToggleOnOff()
+        public void ToggleOnOff()
         {
             if (MenuState == MenuState.Off)
             {
