@@ -29,26 +29,19 @@ namespace Fortive.Mac
         public AudioClip Connected;
         public AudioClip Disconnect;
 
-
-        public Color OffColor = Color.black;
-        public Color StartupColor = Color.gray;
-        public Color NormalColor = Color.white;
-        public Color PeersColor = Color.green;
-        public Color ZeroColor = Color.blue;
-        public Color BumpColor = Color.cyan;
         public Color LowAlarmColor = Color.yellow;
         public Color HighAlarmColor = Color.red;
         public Color PanicColor = Color.magenta;
 
-        public MeshRenderer OffScreen;
-        public MeshRenderer StartupScreen;
-        public MeshRenderer NormalReadingScreen;
-        public MeshRenderer PeerScreen;
-        public MeshRenderer ZeroScreen;
-        public MeshRenderer BumpScreen;
-        public MeshRenderer LowAlarmScreen;
-        public MeshRenderer HighAlarmScreen;
-        public MeshRenderer PanicScreen;
+        public Material OffScreen;
+        public Material StartupScreen;
+        public Material NormalReadingScreen;
+        public Material PeerScreen;
+        public Material ZeroScreen;
+        public Material BumpScreen;
+        public Material LowAlarmScreen;
+        public Material HighAlarmScreen;
+        public Material PanicScreen;
 
         #region event-handlers
         // Start is called before the first frame update
@@ -134,20 +127,20 @@ namespace Fortive.Mac
 
         private void SetMenuScreen()
         {
-            Color color = MenuState switch
+            Material material = MenuState switch
             {
-                MenuState.Off => OffColor,
-                MenuState.Startup => StartupColor,
-                MenuState.Normal => NormalColor,
-                MenuState.Peers => PeersColor,
-                MenuState.Zero => ZeroColor,
-                MenuState.Bump => BumpColor,
-                _ => OffColor
+                MenuState.Off => OffScreen,
+                MenuState.Startup => StartupScreen,
+                MenuState.Normal => NormalReadingScreen,
+                MenuState.Peers => PeerScreen,
+                MenuState.Zero => ZeroScreen,
+                MenuState.Bump => BumpScreen,
+                _ => OffScreen
             };
 
-            if (mesh.material.color != color)
+            if (mesh.material != material)
             {
-                mesh.material.color = color;
+                mesh.material = material;
             }
 
             if (_lastMenuState == MenuState)

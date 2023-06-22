@@ -907,6 +907,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!23 &1313567382 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6416681668968852228, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+  m_PrefabInstance: {fileID: 1686458089754000118}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1619231279
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1158,10 +1163,62 @@ PrefabInstance:
       propertyPath: mat_go
       value: 
       objectReference: {fileID: 199205470}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: mesh
+      value: 
+      objectReference: {fileID: 1313567382}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: OffScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: ba1694c841d4c61439119e0ae5031574, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: BumpScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 492af84c71138a24ab02bb670b6854c1, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: PeerScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 63aa07f92f1b89e4da479fec48fbfd98, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: ZeroScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 015080ccdbeb22e42b9f2c5dd2081639, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: PanicScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 9ae95e8a7714ee44b8ca8ef7f0fcf4cb, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: StartupScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: bc4c5e76e7f8f79418a856b1be4cb0ef, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: LowAlarmScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: d55f77e62418abe42800268c057b5a5b, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: HighAlarmScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 4e82310d477793a4a8be4c921b2cc1b4, type: 2}
+    - target: {fileID: 5750750911736873769, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: NormalReadingScreen
+      value: 
+      objectReference: {fileID: 2100000, guid: 94c83c0cfade7a94c8c0d314fd9133c6, type: 2}
     - target: {fileID: 6014511740205568785, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
       propertyPath: mat_go
       value: 
       objectReference: {fileID: 199205470}
+    - target: {fileID: 6416681668968852228, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6416681668968852228, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 94c83c0cfade7a94c8c0d314fd9133c6, type: 2}
+    - target: {fileID: 6416681668968852228, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ba1694c841d4c61439119e0ae5031574, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57d6afa166864ff468c1be3335f8e4a8, type: 3}
 --- !u!1001 &2849646712666240530
