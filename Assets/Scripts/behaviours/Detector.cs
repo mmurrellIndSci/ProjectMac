@@ -46,6 +46,7 @@ namespace Fortive.Mac
         {
             LoadEmitters();
             LoadAudioSource();
+            mesh.material.color = OffColor;
         }
 
         // Update is called once per frame

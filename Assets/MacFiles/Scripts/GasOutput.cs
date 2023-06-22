@@ -15,5 +15,6 @@ public class GasOutput : MonoBehaviour
     public GasType gas_type;
     public float gas_level;
     public Transform gas_transform;
+    public bool is_active = false;
 
 }

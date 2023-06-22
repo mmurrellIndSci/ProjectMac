@@ -47,6 +47,7 @@ public class Sensor : MonoBehaviour
 
     private void Calculate_GasLevel(GasOutput gas)
     {
+        if (!gas.is_active) return;
         if ((int)gas.gas_type == (int)sensor_type)
         {
             Vector3 difference = transform.position - gas.gas_transform.position;

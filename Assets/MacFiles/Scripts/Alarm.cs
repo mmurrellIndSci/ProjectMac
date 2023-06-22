@@ -28,28 +28,7 @@ public class Alarm : MonoBehaviour
     void Update()
     {
         GetHighestAlarm();
-        switch (alarm_level)
-        {
-            case AlarmLevel.GasDetected:
-                mat.color = new Color(1, 1, 1, 1);
-                break;
-            case AlarmLevel.None:
-                mat.color = new Color(1, 0, 1, 1);
-                break;
-            case AlarmLevel.LowAlarm:
-                mat.color = new Color(1, 0, 0, 1);
-                break;
-            case AlarmLevel.HighAlarm:
-                mat.color = new Color(0, 1, 1, 1);
-                break;
-            case AlarmLevel.PanicAlarm:
-                mat.color = new Color(0, 0, 1, 1);
-                break;
-            case AlarmLevel.PeerAlarm:
-                mat.color = new Color(1, 1, 1, 1);
-                break;
-
-        }
+        
     }
 
     private void GetHighestAlarm()
